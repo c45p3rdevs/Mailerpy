@@ -25,15 +25,15 @@ def validar_correos(correos):
 # Función para enviar correos electrónicos
 def enviar_correo(asunto, mensaje, destinatarios):
     try:
-        remitente = "casperklan92@gmail.com"
-        password = "Os203313+"
+        remitente = "oi.mirandaolmos@ugto.mx"
+        password = "UzVO0sw1"
 
         msg = MIMEText(mensaje)
         msg['Subject'] = asunto
         msg['From'] = remitente
         msg['To'] = ", ".join(destinatarios)
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        with smtplib.SMTP_SSL('smtp.office365.com', 587) as server:
             server.login(remitente, password)
             server.sendmail(remitente, destinatarios, msg.as_string())
         
