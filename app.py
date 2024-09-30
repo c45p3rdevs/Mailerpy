@@ -3,6 +3,9 @@ import mysql.connector
 import smtplib
 from email.mime.text import MIMEText
 import re
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -25,17 +28,19 @@ def validar_correos(correos):
 # Función para enviar correos electrónicos
 def enviar_correo(asunto, mensaje, destinatarios):
     try:
-        remitente = "oi.mirandaolmos@ugto.mx"
-        password = "UzVO0sw1"
+        remitente = "casperklan92@gmail.com"
+        password = "wesp heno zjne ikkd"
 
         msg = MIMEText(mensaje)
         msg['Subject'] = asunto
         msg['From'] = remitente
         msg['To'] = ", ".join(destinatarios)
 
-        with smtplib.SMTP_SSL('smtp.office365.com', 587) as server:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(remitente, password)
             server.sendmail(remitente, destinatarios, msg.as_string())
+           
+            
         
         flash(f"Correo enviado exitosamente a: {', '.join(destinatarios)}.", "success")
         return True
@@ -67,8 +72,8 @@ def agregar_reporte():
     cursor.execute('INSERT INTO reportes (titulo, estatus, correos) VALUES (%s, %s, %s)', (titulo, 'Pendiente', correos))
     conn.commit()
 
-    mensaje = f"Nuevo reporte agregado: {titulo}"
-    enviar_correo("Nuevo Reporte", mensaje, correos_lista)
+    mensaje = f"Gracias por enviar su reporte. Le confirmamos que hemos recibido su solicitud y será atendida a la brevedad posible. Nuestro equipo ya está trabajando para resolver el asunto y le mantendremos informado(a) sobre cualquier actualización importante. Atentamente DGSP: {titulo}"
+    enviar_correo("Nuevo Reporte Generado", mensaje, correos_lista)
 
     flash("Reporte agregado y correos enviados.", "success")
     return redirect(url_for('index'))
@@ -79,7 +84,7 @@ def cambiar_estatus():
     reporte_id = request.form['id']
     
     # Obtener el estatus actual y los correos desde la tabla 'reportes'
-    cursor.execute('SELECT estatus, correos FROM reportes WHERE id=%s', (reporte_id,))
+    cursor.execute('SELECT estatus, correos FROM reportes WHERE id=%s', (reporte_id, ))
     estatus_actual, correos = cursor.fetchone()
     
     if correos is None:
@@ -87,13 +92,13 @@ def cambiar_estatus():
 
     # Cambiar el estatus
     nuevo_estatus = "Atendido" if estatus_actual == "Pendiente" else "Finalizado"
-    cursor.execute('UPDATE reportes SET estatus=%s WHERE id=%s', (nuevo_estatus, reporte_id))
+    cursor.execute('UPDATE reportes SET estatus=%s WHERE id=%s', (nuevo_estatus, reporte_id,))
     conn.commit()
 
     if correos:
-        mensaje = f"El estatus del reporte {reporte_id} ha cambiado a {nuevo_estatus}."
+        mensaje = f"El estatus de {reporte_id} ha cambiado a {nuevo_estatus} Si tiene alguna otra consulta o necesita más información, no dude en ponerse en contacto con nosotros respondiendo a este correo."
         correos_lista = correos.split(",")
-        enviar_correo("Cambio de Estatus", mensaje, correos_lista)
+        enviar_correo("Cambio el Estatus de su Reporte", mensaje, correos_lista)
 
     flash(f"Estatus del reporte actualizado a {nuevo_estatus}.", "success")
     return redirect(url_for('index'))
