@@ -3,8 +3,7 @@ import mysql.connector
 import smtplib
 from email.mime.text import MIMEText
 import re
-import os
-from werkzeug.utils import secure_filename
+
 
 
 app = Flask(__name__)
@@ -15,7 +14,7 @@ conn = mysql.connector.connect(
     host="localhost",
     user="root",
     password="",
-    database="reports_ord"
+    database="sis_report"
 )
 cursor = conn.cursor()
 
@@ -83,8 +82,9 @@ def agregar_reporte():
 def cambiar_estatus():
     reporte_id = request.form['id']
     
+    
     # Obtener el estatus actual y los correos desde la tabla 'reportes'
-    cursor.execute('SELECT estatus, correos FROM reportes WHERE id=%s', (reporte_id, ))
+    cursor.execute('SELECT estatus, correos FROM reportes WHERE id=%s', (reporte_id,))
     estatus_actual, correos = cursor.fetchone()
     
     if correos is None:
