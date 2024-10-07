@@ -27,8 +27,8 @@ def validar_correos(correos):
 # Función para enviar correos electrónicos
 def enviar_correo(asunto, mensaje, destinatarios):
     try:
-        remitente = "casperklan92@gmail.com"
-        password = "wesp heno zjne ikkd"
+        remitente = "oscar.imrandaolmos@gmail.com"
+        password = "kmzz hyxw ydzn yhtx"
 
         
         msg = MIMEText(mensaje,  'html')
@@ -73,7 +73,7 @@ def agregar_reporte():
     cursor.execute('INSERT INTO reportes (titulo, estatus, correos) VALUES (%s, %s, %s)', (titulo, 'Pendiente', correos))
     conn.commit()
    
-    mensaje = f"Gracias por enviar su reporte {titulo}. Le confirmamos que hemos recibido su solicitud y será atendida a la brevedad posible. Nuestro equipo ya está trabajando para resolver el asunto y le mantendremos informado(a) sobre cualquier actualización importante. Atentamente DGSP: "
+    mensaje = f"Gracias por enviar su reporte <strong>{titulo}</strong>. Le confirmamos que hemos recibido su solicitud y será atendida a la brevedad posible. Nuestro equipo ya está trabajando para resolver el asunto y le mantendremos informado(a) sobre cualquier actualización importante.<br> <br> Atentamente <br> Oscar Miranda Olmos<br> Direccion General del Sistema Penitenciario <br> <br> <img src='https://seguridad.guanajuato.gob.mx/wp-content/uploads/2021/05/logo-dgsp.jpg' "
     enviar_correo("Nuevo Reporte Generado", mensaje, correos_lista)
 
     flash("Reporte agregado y correos enviados.", "success")
@@ -99,7 +99,7 @@ def cambiar_estatus():
     conn.commit()
 
     if correos:
-        mensaje = f"El estatus de su reporte generado <strong>{titulo}</strong>, con el ID <strong>{reporte_id}</strong> ha cambiado a <strong>{nuevo_estatus}</strong> Si tiene alguna otra consulta o necesita más información, no dude en ponerse en contacto con nosotros respondiendo a este correo."
+        mensaje = f"El estatus de su reporte generado <strong>{titulo}</strong>, con el ID <strong>{reporte_id}</strong> ha cambiado a <strong>{nuevo_estatus}</strong> Si tiene alguna otra consulta o necesita más información, no dude en ponerse en contacto con nosotros respondiendo a este correo.<br> Atentamente <br> Oscar Miranda Olmos<br> Direccion General del Sistema Penitenciario <br> <br> <img src='https://seguridad.guanajuato.gob.mx/wp-content/uploads/2021/05/logo-dgsp.jpg'"
         correos_lista = correos.split(",")
         enviar_correo("Cambio el Estatus de su Reporte", mensaje, correos_lista)
 
